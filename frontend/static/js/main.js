@@ -1,3 +1,5 @@
+let lastResult = null;
+
 async function analyzeURL() {
     const url = document.getElementById('urlInput').value.trim();
 
@@ -26,6 +28,7 @@ async function analyzeURL() {
         });
 
         const data = await response.json();
+        lastResult = data;
 
         // Hide spinner
         document.getElementById('loadingSpinner').classList.add('d-none');
@@ -50,7 +53,6 @@ async function analyzeURL() {
             resultIcon.innerHTML = '🚨';
             resultText.innerHTML = 'This URL appears to be <span class="text-danger">Phishing</span>';
             
-            // Show reasons
             if (data.reasons && data.reasons.length > 0) {
                 let reasonsHTML = '<div class="mt-3 text-start"><strong>⚠️ Reasons:</strong><ul class="mt-2">';
                 data.reasons.forEach(reason => {
@@ -64,10 +66,32 @@ async function analyzeURL() {
         resultConfidence.innerHTML = `Confidence: <strong>${data.confidence}%</strong>`;
         resultURL.innerHTML = `Analyzed: ${data.url}`;
 
+        // Show feedback buttons
+        document.getElementById('feedbackSection').classList.remove('d-none');
+        document.getElementById('feedbackMessage').innerHTML = '';
+
     } catch (error) {
         document.getElementById('loadingSpinner').classList.add('d-none');
         alert('Error analyzing URL. Please try again.');
     }
+}
+
+async function sendFeedback(correct) {
+    if (!lastResult) return;
+
+    const response = await fetch('/feedback', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+            url: lastResult.url,
+            prediction: lastResult.prediction,
+            correct: correct
+        })
+    });
+
+    const data = await response.json();
+    document.getElementById('feedbackSection').classList.add('d-none');
+    document.getElementById('feedbackMessage').innerHTML = `<p class="text-success mt-2">✅ ${data.message}</p>`;
 }
 
 // Allow pressing Enter to analyze

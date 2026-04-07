@@ -6,6 +6,14 @@ async function analyzeURL() {
         return;
     }
 
+    // Basic URL validation
+    try {
+        new URL(url);
+    } catch {
+        alert('Please enter a valid URL including http:// or https://');
+        return;
+    }
+
     // Show spinner, hide result
     document.getElementById('loadingSpinner').classList.remove('d-none');
     document.getElementById('resultBox').classList.add('d-none');
@@ -28,6 +36,7 @@ async function analyzeURL() {
         const resultText = document.getElementById('resultText');
         const resultConfidence = document.getElementById('resultConfidence');
         const resultURL = document.getElementById('resultURL');
+        const resultReasons = document.getElementById('resultReasons');
 
         resultBox.classList.remove('d-none', 'safe', 'unsafe');
 
@@ -35,10 +44,21 @@ async function analyzeURL() {
             resultBox.classList.add('safe');
             resultIcon.innerHTML = '✅';
             resultText.innerHTML = 'This URL appears to be <span class="text-success">Safe</span>';
+            resultReasons.innerHTML = '';
         } else {
             resultBox.classList.add('unsafe');
             resultIcon.innerHTML = '🚨';
             resultText.innerHTML = 'This URL appears to be <span class="text-danger">Phishing</span>';
+            
+            // Show reasons
+            if (data.reasons && data.reasons.length > 0) {
+                let reasonsHTML = '<div class="mt-3 text-start"><strong>⚠️ Reasons:</strong><ul class="mt-2">';
+                data.reasons.forEach(reason => {
+                    reasonsHTML += `<li>${reason}</li>`;
+                });
+                reasonsHTML += '</ul></div>';
+                resultReasons.innerHTML = reasonsHTML;
+            }
         }
 
         resultConfidence.innerHTML = `Confidence: <strong>${data.confidence}%</strong>`;

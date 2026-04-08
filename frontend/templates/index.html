@@ -40,6 +40,13 @@
                 <p id="resultConfidence"></p>
                 <p id="resultURL" class="text-muted small"></p>
                 <div id="resultReasons"></div>
+                <!-- Feedback Section -->
+                <div id="feedbackSection" class="mt-3 d-none">
+                    <p class="text-muted small">Was this result correct?</p>
+                    <button class="btn btn-success btn-sm me-2" onclick="sendFeedback(true)">👍 Yes</button>
+                    <button class="btn btn-danger btn-sm" onclick="sendFeedback(false)">👎 No</button>
+                </div>
+                <div id="feedbackMessage"></div>
             </div>
 
             <!-- Loading Spinner -->

@@ -1,15 +1,16 @@
 from flask import Flask, request, jsonify, render_template
 from predictor import predict_url
+from pathlib import Path
 import sqlite3
 import os
 
 app = Flask(__name__, template_folder='../frontend/templates', static_folder='../frontend/static')
 
 # Database setup
-DB_PATH = '../database/feedback.db'
+DB_PATH = Path(__file__).resolve().parent.parent / 'database' / 'feedback.db'
 
 def init_db():
-    conn = sqlite3.connect(DB_PATH)
+    conn = sqlite3.connect(str(DB_PATH))
     c = conn.cursor()
     c.execute('''
         CREATE TABLE IF NOT EXISTS feedback (
@@ -52,7 +53,7 @@ def feedback():
     if not all([url, prediction, correct is not None]):
         return jsonify({'error': 'Missing data'}), 400
 
-    conn = sqlite3.connect(DB_PATH)
+    conn = sqlite3.connect(str(DB_PATH))
     c = conn.cursor()
     c.execute('INSERT INTO feedback (url, prediction, correct) VALUES (?, ?, ?)',
               (url, prediction, int(correct)))
@@ -65,6 +66,8 @@ def feedback():
 def page_not_found(e):
     return render_template('404.html'), 404
 
-if __name__ == '__main__':
+with app.app_context():
     init_db()
+
+if __name__ == '__main__':
     app.run(debug=True)

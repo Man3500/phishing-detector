@@ -1,66 +1,272 @@
+/* Central University Official Colors */
+:root {
+  --cu-red: #9B2621;
+  --cu-accent: #FC3034;
+  --cu-light: #F5F5F5;
+  --cu-gray: #f4f4f4;
+  --cu-dark: #222;
+  --radius: 10px;
+  --transition: all 0.3s ease;
+  --error-red: #E74C3C;
+  --success-green: #2ECC71;
+}
+
+/* ── Base ── */
 body {
-    font-family: 'Segoe UI', sans-serif;
-    background-color: #f8f9fa;
+  font-family: 'DM Sans', Helvetica, sans-serif;
+  background-color: var(--cu-light);
+  color: var(--cu-dark);
 }
 
+h1, h2, h3, h4, h5, h6 {
+  font-family: 'Inter', Helvetica, sans-serif;
+}
+
+/* ── Navbar ── */
+.navbar {
+  background-color: var(--cu-red) !important;
+  border-bottom: 3px solid var(--cu-accent);
+}
+
+.navbar-brand {
+  font-weight: bold;
+  font-size: 1.2rem;
+  letter-spacing: 0.5px;
+  color: #fff !important;
+}
+
+.nav-link {
+  color: rgba(255,255,255,0.85) !important;
+  font-size: 0.95rem;
+  transition: var(--transition);
+}
+
+.nav-link:hover,
+.nav-link.active {
+  color: #fff !important;
+  border-bottom: 2px solid #fff;
+}
+
+/* ── Hero ── */
 .hero {
-    background: linear-gradient(135deg, #1a1a2e, #16213e);
-    color: white;
-    padding: 80px 0;
+  background: var(--cu-red);
+  color: white;
+  padding: 72px 0 64px;
+  border-bottom: 4px solid var(--cu-accent);
 }
 
+.hero h1 {
+  font-size: 2.6rem;
+  font-weight: 700;
+  letter-spacing: -0.5px;
+}
+
+.hero .lead {
+  color: rgba(255,255,255,0.85);
+  font-size: 1.1rem;
+}
+
+/* ── URL Form ── */
 .url-form {
-    max-width: 600px;
-    margin-top: 30px;
+  max-width: 600px;
+  margin-top: 28px;
 }
 
+.url-form .form-control {
+  border: none;
+  border-radius: var(--radius) 0 0 var(--radius);
+  font-size: 1rem;
+  padding: 12px 16px;
+}
+
+.url-form .form-control:focus {
+  box-shadow: none;
+  outline: none;
+}
+
+.url-form .btn-primary {
+  background-color: var(--cu-dark);
+  border: none;
+  border-radius: 0 var(--radius) var(--radius) 0;
+  padding: 12px 24px;
+  font-weight: 600;
+  letter-spacing: 0.3px;
+  transition: var(--transition);
+}
+
+.url-form .btn-primary:hover {
+  background-color: #000;
+}
+
+/* ── Result Box ── */
 .result-box {
-    max-width: 500px;
-    background: white;
-    color: #333;
-    border-radius: 16px;
-    padding: 30px;
-    margin-top: 30px;
-    box-shadow: 0 8px 32px rgba(0,0,0,0.2);
+  max-width: 500px;
+  background: white;
+  color: var(--cu-dark);
+  border-radius: var(--radius);
+  padding: 32px 28px;
+  margin-top: 28px;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+  border-top: 4px solid var(--cu-accent);
 }
 
 .result-icon {
-    font-size: 60px;
-    margin-bottom: 10px;
+  font-size: 52px;
+  margin-bottom: 8px;
 }
 
+.result-box h3 {
+  font-size: 1.4rem;
+  font-weight: 700;
+}
+
+.result-box.safe {
+  border-top-color: var(--success-green);
+}
+
+.result-box.unsafe {
+  border-top-color: var(--error-red);
+}
+
+/* ── How It Works Cards ── */
 .feature-card {
-    background: white;
-    border-radius: 12px;
-    padding: 30px 20px;
-    box-shadow: 0 2px 12px rgba(0,0,0,0.08);
-    margin-bottom: 20px;
+  background: white;
+  border-radius: var(--radius);
+  padding: 28px 20px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+  margin-bottom: 20px;
+  border-top: 3px solid var(--cu-accent);
+  transition: var(--transition);
+}
+
+.feature-card:hover {
+  box-shadow: 0 4px 16px rgba(155,38,33,0.12);
+  transform: translateY(-2px);
 }
 
 .feature-icon {
-    font-size: 40px;
-    margin-bottom: 15px;
+  font-size: 36px;
+  margin-bottom: 12px;
 }
 
-.safe {
-    border: 3px solid #28a745;
+.feature-card h5 {
+  font-weight: 700;
+  color: var(--cu-red);
 }
 
-.unsafe {
-    border: 3px solid #dc3545;
-}
-
+/* ── Awareness Cards ── */
 .awareness-card {
-    background: white;
-    border-radius: 12px;
-    padding: 30px;
-    box-shadow: 0 2px 12px rgba(0,0,0,0.08);
+  background: white;
+  border-radius: var(--radius);
+  padding: 28px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+  border-left: 4px solid var(--cu-red);
 }
 
 .awareness-card h4 {
-    margin-bottom: 15px;
+  color: var(--cu-red);
+  font-weight: 700;
+  margin-bottom: 14px;
+  font-size: 1.1rem;
 }
 
 .awareness-card ul li {
-    margin-bottom: 8px;
+  margin-bottom: 8px;
+  line-height: 1.6;
+}
+
+.awareness-card code {
+  background: var(--cu-gray);
+  color: var(--cu-red);
+  padding: 1px 5px;
+  border-radius: 4px;
+  font-size: 0.9em;
+}
+
+/* ── Table ── */
+.table thead.table-dark th {
+  background-color: var(--cu-red) !important;
+  color: #fff;
+  border-color: var(--cu-red);
+}
+
+.table-bordered td, .table-bordered th {
+  border-color: #e0e0e0;
+}
+
+/* ── Quiz Buttons ── */
+.quiz-btn {
+  border-color: #ccc;
+  color: var(--cu-dark);
+  text-align: left;
+  font-size: 0.92rem;
+  transition: var(--transition);
+}
+
+.quiz-btn:hover:not(:disabled) {
+  border-color: var(--cu-red);
+  color: var(--cu-red);
+  background: #fff5f5;
+}
+
+/* ── Buttons ── */
+.btn-primary {
+  background-color: var(--cu-red);
+  border-color: var(--cu-red);
+  transition: var(--transition);
+}
+
+.btn-primary:hover {
+  background-color: #7e1e1a;
+  border-color: #7e1e1a;
+}
+
+/* ── Section Headings ── */
+.section-title {
+  font-weight: 700;
+  color: var(--cu-dark);
+  position: relative;
+  display: inline-block;
+  margin-bottom: 8px;
+}
+
+.section-title::after {
+  content: '';
+  display: block;
+  height: 3px;
+  width: 48px;
+  background: var(--cu-accent);
+  margin-top: 6px;
+  border-radius: 2px;
+}
+
+/* ── Footer ── */
+footer {
+  background-color: var(--cu-red) !important;
+  border-top: 3px solid var(--cu-accent);
+}
+
+footer .text-muted {
+  color: rgba(255,255,255,0.6) !important;
+}
+
+/* ── 404 Page ── */
+.not-found-icon {
+  font-size: 80px;
+}
+
+/* ── Spinner ── */
+.spinner-border.text-primary {
+  color: var(--cu-red) !important;
+}
+
+/* ── Feedback buttons ── */
+#feedbackSection .btn-success {
+  background-color: var(--success-green);
+  border-color: var(--success-green);
+}
+
+#feedbackSection .btn-danger {
+  background-color: var(--error-red);
+  border-color: var(--error-red);
 }

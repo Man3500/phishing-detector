@@ -79,24 +79,34 @@ def predict_url(url):
 
     # Extract features from the URL
     features = extract_features(url)
-    
+
     # Convert to dataframe with only the columns the model expects
     df = pd.DataFrame([features])[feature_columns]
-    
+
     # Make prediction
     prediction = model.predict(df)[0]
-    confidence = model.predict_proba(df)[0]
-    
-    # Get confidence score
-    confidence_score = round(max(confidence) * 100, 2)
-    
-    # Get reasons
-    reasons = get_reasons(features, url)
-    
-    # Return result
+    proba = model.predict_proba(df)[0]
+
+    # Confidence score for the predicted class
+    confidence_score = round(max(proba) * 100, 2)
+
+    # Three-tier classification:
+    # - legitimate: model says safe AND confidence >= 70%
+    # - suspicious: model is uncertain (confidence < 70%) regardless of prediction
+    # - phishing: model says phishing AND confidence >= 70%
+    if confidence_score < 70:
+        tier = 'suspicious'
+    elif prediction == 1:
+        tier = 'phishing'
+    else:
+        tier = 'legitimate'
+
+    # Get reasons (only relevant for suspicious and phishing)
+    reasons = get_reasons(features, url) if tier != 'legitimate' else []
+
     return {
         'url': url,
-        'prediction': 'phishing' if prediction == 1 else 'legitimate',
+        'prediction': tier,
         'confidence': confidence_score,
         'reasons': reasons
     }

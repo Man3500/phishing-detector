@@ -1,21 +1,41 @@
 /* Central University Official Colors */
 :root {
-  --cu-red: #9B2621;
-  --cu-accent: #FC3034;
-  --cu-light: #F5F5F5;
-  --cu-gray: #f4f4f4;
-  --cu-dark: #222;
-  --radius: 10px;
+  /* Brand */
+  --cu-red:     #9B2621;      /* primary — deep university red */
+  --cu-accent:  #C0392B;      /* accent — slightly lighter, same family */
+
+  /* Surfaces */
+  --cu-light:   #F5F5F5;      /* page background */
+  --cu-white:   #FFFFFF;      /* card/navbar background */
+
+  /* Text */
+  --cu-dark:    #1A1A1A;      /* primary text */
+  --cu-muted:   #6B6B6B;      /* secondary text */
+
+  /* Semantic */
+  --success:    #1E8449;      /* darker, more serious green */
+  --warning:    #B7770D;      /* amber — suspicious state */
+  --error:      #E74C3C;      /* distinct from brand reds */
+
+  /* Utility */
+  --radius:     10px;
   --transition: all 0.3s ease;
-  --error-red: #E74C3C;
-  --success-green: #2ECC71;
 }
 
 /* ── Base ── */
+html, body {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+}
+
 body {
   font-family: 'DM Sans', Helvetica, sans-serif;
   background-color: var(--cu-light);
   color: var(--cu-dark);
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
 }
 
 h1, h2, h3, h4, h5, h6 {
@@ -25,7 +45,8 @@ h1, h2, h3, h4, h5, h6 {
 /* ── Navbar ── */
 .navbar {
   background-color: var(--cu-red) !important;
-  border-bottom: 3px solid var(--cu-accent);
+  border-bottom: 4px solid var(--cu-accent);
+  box-shadow: 0 2px 8px rgba(0,0,0,0.15);
 }
 
 .navbar-brand {
@@ -49,9 +70,9 @@ h1, h2, h3, h4, h5, h6 {
 
 /* ── Hero ── */
 .hero {
-  background: var(--cu-red);
-  color: white;
-  padding: 72px 0 64px;
+  background: linear-gradient(135deg, #9B2621 0%, #7e1e1a 100%);
+  color: var(--cu-white);
+  padding: 72px 0;
   border-bottom: 4px solid var(--cu-accent);
 }
 
@@ -101,18 +122,19 @@ h1, h2, h3, h4, h5, h6 {
 /* ── Result Box ── */
 .result-box {
   max-width: 500px;
-  background: white;
+  background: var(--cu-white);
   color: var(--cu-dark);
   border-radius: var(--radius);
   padding: 32px 28px;
   margin-top: 28px;
-  box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+  box-shadow: 0 4px 20px rgba(0,0,0,0.2);
   border-top: 4px solid var(--cu-accent);
 }
 
 .result-icon {
   font-size: 52px;
   margin-bottom: 8px;
+  line-height: 1;
 }
 
 .result-box h3 {
@@ -121,16 +143,20 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 .result-box.safe {
-  border-top-color: var(--success-green);
+  border-top-color: var(--success);
+}
+
+.result-box.suspicious {
+  border-top-color: var(--warning);
 }
 
 .result-box.unsafe {
-  border-top-color: var(--error-red);
+  border-top-color: var(--error);
 }
 
 /* ── How It Works Cards ── */
 .feature-card {
-  background: white;
+  background: var(--cu-white);
   border-radius: var(--radius);
   padding: 28px 20px;
   box-shadow: 0 2px 8px rgba(0,0,0,0.06);
@@ -156,7 +182,7 @@ h1, h2, h3, h4, h5, h6 {
 
 /* ── Awareness Cards ── */
 .awareness-card {
-  background: white;
+  background: var(--cu-white);
   border-radius: var(--radius);
   padding: 28px;
   box-shadow: 0 2px 8px rgba(0,0,0,0.06);
@@ -168,25 +194,51 @@ h1, h2, h3, h4, h5, h6 {
   font-weight: 700;
   margin-bottom: 14px;
   font-size: 1.1rem;
+  padding-bottom: 8px;
+  border-bottom: 1px solid #f0f0f0;
 }
 
 .awareness-card ul li {
   margin-bottom: 8px;
   line-height: 1.6;
+  color: var(--cu-dark);
 }
 
 .awareness-card code {
-  background: var(--cu-gray);
+  background: var(--cu-light);
   color: var(--cu-red);
   padding: 1px 5px;
   border-radius: 4px;
   font-size: 0.9em;
 }
 
+/* ── Model Stats ── */
+.stat-card {
+  background: var(--cu-white);
+  border-radius: var(--radius);
+  padding: 20px;
+  text-align: center;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+  border-top: 3px solid var(--cu-accent);
+}
+
+.stat-card .stat-value {
+  font-size: 2rem;
+  font-weight: 700;
+  color: var(--cu-red);
+  font-family: 'Inter', Helvetica, sans-serif;
+}
+
+.stat-card .stat-label {
+  font-size: 0.85rem;
+  color: var(--cu-muted);
+  margin-top: 4px;
+}
+
 /* ── Table ── */
 .table thead.table-dark th {
   background-color: var(--cu-red) !important;
-  color: #fff;
+  color: var(--cu-white);
   border-color: var(--cu-red);
 }
 
@@ -217,8 +269,8 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 .btn-primary:hover {
-  background-color: #7e1e1a;
-  border-color: #7e1e1a;
+  background-color: var(--cu-accent);
+  border-color: var(--cu-accent);
 }
 
 /* ── Section Headings ── */
@@ -246,6 +298,10 @@ footer {
   border-top: 3px solid var(--cu-accent);
 }
 
+footer p {
+  color: rgba(255,255,255,0.85);
+}
+
 footer .text-muted {
   color: rgba(255,255,255,0.6) !important;
 }
@@ -256,17 +312,17 @@ footer .text-muted {
 }
 
 /* ── Spinner ── */
-.spinner-border.text-primary {
-  color: var(--cu-red) !important;
+.spinner-border {
+  color: var(--cu-white) !important;
 }
 
-/* ── Feedback buttons ── */
+/* ── Feedback Buttons ── */
 #feedbackSection .btn-success {
-  background-color: var(--success-green);
-  border-color: var(--success-green);
+  background-color: var(--success);
+  border-color: var(--success);
 }
 
 #feedbackSection .btn-danger {
-  background-color: var(--error-red);
-  border-color: var(--error-red);
+  background-color: var(--error);
+  border-color: var(--error);
 }

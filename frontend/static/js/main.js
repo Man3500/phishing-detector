@@ -1,92 +1,115 @@
 let lastResult = null;
 
 async function analyzeURL() {
-    const url = document.getElementById('urlInput').value.trim();
-    if (!url) {
-        alert('Please enter a URL');
-        return;
-    }
+  const url = document.getElementById('urlInput').value.trim();
 
-    try {
-        new URL(url);
-    } catch {
-        alert('Please enter a valid URL including http:// or https://');
-        return;
-    }
+  if (!url) {
+    alert('Please enter a URL');
+    return;
+  }
 
-    document.getElementById('loadingSpinner').classList.remove('d-none');
-    document.getElementById('resultBox').classList.add('d-none');
+  try {
+    new URL(url);
+  } catch {
+    alert('Please enter a valid URL including http:// or https://');
+    return;
+  }
 
-    try {
-        const response = await fetch('/analyze', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ url: url })
-        });
+  document.getElementById('loadingSpinner').classList.remove('d-none');
+  document.getElementById('resultBox').classList.add('d-none');
 
-        const data = await response.json();
-        lastResult = data;
-
-        document.getElementById('loadingSpinner').classList.add('d-none');
-
-        const resultBox        = document.getElementById('resultBox');
-        const resultText       = document.getElementById('resultText');
-        const resultConfidence = document.getElementById('resultConfidence');
-        const resultURL        = document.getElementById('resultURL');
-        const resultReasons    = document.getElementById('resultReasons');
-
-        resultBox.classList.remove('d-none', 'safe', 'unsafe');
-
-        if (data.prediction === 'legitimate') {
-            resultBox.classList.add('safe');
-            resultText.innerHTML = 'This URL appears to be <span class="text-success fw-bold">Safe</span>';
-            resultReasons.innerHTML = '';
-        } else {
-            resultBox.classList.add('unsafe');
-            resultText.innerHTML = 'This URL appears to be <span class="text-danger fw-bold">Phishing</span>';
-
-            if (data.reasons && data.reasons.length > 0) {
-                let reasonsHTML = '<div class="mt-3 text-start"><p class="fw-semibold mb-2" style="color: var(--cu-red)">Why we flagged this:</p><ul class="mt-1">';
-                data.reasons.forEach(reason => {
-                    reasonsHTML += `<li>${reason}</li>`;
-                });
-                reasonsHTML += '</ul></div>';
-                resultReasons.innerHTML = reasonsHTML;
-            }
-        }
-
-        resultConfidence.innerHTML = `Confidence: <strong>${data.confidence}%</strong>`;
-        resultURL.innerHTML = `Analyzed: <span class="text-muted">${data.url}</span>`;
-
-        document.getElementById('feedbackSection').classList.remove('d-none');
-        document.getElementById('feedbackMessage').innerHTML = '';
-
-    } catch (error) {
-        document.getElementById('loadingSpinner').classList.add('d-none');
-        alert('Error analyzing URL. Please try again.');
-    }
-}
-
-async function sendFeedback(correct) {
-    if (!lastResult) return;
-
-    const response = await fetch('/feedback', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-            url: lastResult.url,
-            prediction: lastResult.prediction,
-            correct: correct
-        })
+  try {
+    const response = await fetch('/analyze', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ url: url })
     });
 
     const data = await response.json();
-    document.getElementById('feedbackSection').classList.add('d-none');
-    document.getElementById('feedbackMessage').innerHTML = `<p class="mt-2 small" style="color: var(--success-green)">${data.message}</p>`;
+    lastResult = data;
+
+    document.getElementById('loadingSpinner').classList.add('d-none');
+
+    const resultBox        = document.getElementById('resultBox');
+    const resultIcon       = document.getElementById('resultIcon');
+    const resultText       = document.getElementById('resultText');
+    const resultConfidence = document.getElementById('resultConfidence');
+    const resultURL        = document.getElementById('resultURL');
+    const resultReasons    = document.getElementById('resultReasons');
+
+    resultBox.classList.remove('d-none', 'safe', 'unsafe', 'suspicious');
+
+    if (data.prediction === 'legitimate') {
+      resultBox.classList.add('safe');
+      resultIcon.innerHTML = '<i class="fa-solid fa-shield-halved" style="color: var(--success)"></i>';
+      resultText.innerHTML = 'This URL appears to be <span class="fw-bold" style="color: var(--success)">Safe</span>';
+      resultReasons.innerHTML = '';
+
+    } else if (data.prediction === 'suspicious') {
+      resultBox.classList.add('suspicious');
+      resultIcon.innerHTML = '<i class="fa-solid fa-circle-exclamation" style="color: var(--warning)"></i>';
+      resultText.innerHTML = 'This URL looks <span class="fw-bold" style="color: var(--warning)">Suspicious</span>';
+
+      if (data.reasons && data.reasons.length > 0) {
+        let reasonsHTML = '<div class="mt-3 text-start"><p class="fw-semibold mb-2" style="color: var(--warning)">Why we flagged this:</p><ul class="mt-1">';
+        data.reasons.forEach(reason => {
+          reasonsHTML += `<li>${reason}</li>`;
+        });
+        reasonsHTML += '</ul></div>';
+        resultReasons.innerHTML = reasonsHTML;
+      }
+
+    } else {
+      resultBox.classList.add('unsafe');
+      resultIcon.innerHTML = '<i class="fa-solid fa-triangle-exclamation" style="color: var(--error)"></i>';
+      resultText.innerHTML = 'This URL appears to be <span class="fw-bold" style="color: var(--error)">Phishing</span>';
+
+      if (data.reasons && data.reasons.length > 0) {
+        let reasonsHTML = '<div class="mt-3 text-start"><p class="fw-semibold mb-2" style="color: var(--cu-red)">Why we flagged this:</p><ul class="mt-1">';
+        data.reasons.forEach(reason => {
+          reasonsHTML += `<li>${reason}</li>`;
+        });
+        reasonsHTML += '</ul></div>';
+        resultReasons.innerHTML = reasonsHTML;
+      }
+    }
+
+    resultConfidence.innerHTML = `Confidence: <strong>${data.confidence}%</strong>`;
+    resultURL.innerHTML = `Analyzed: <span class="text-muted">${data.url}</span>`;
+
+    document.getElementById('feedbackSection').classList.remove('d-none');
+    document.getElementById('feedbackMessage').innerHTML = '';
+
+  } catch (error) {
+    document.getElementById('loadingSpinner').classList.add('d-none');
+    alert('Error analyzing URL. Please try again.');
+  }
+}
+
+async function sendFeedback(correct) {
+  if (!lastResult) return;
+
+  const response = await fetch('/feedback', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({
+      url: lastResult.url,
+      prediction: lastResult.prediction,
+      correct: correct
+    })
+  });
+
+  const data = await response.json();
+  document.getElementById('feedbackSection').classList.add('d-none');
+  document.getElementById('feedbackMessage').innerHTML = `<p class="mt-2 small" style="color: var(--success)">${data.message}</p>`;
 }
 
 document.addEventListener('DOMContentLoaded', () => {
-    document.getElementById('urlInput').addEventListener('keypress', (e) => {
-        if (e.key === 'Enter') analyzeURL();
-    });
+  document.getElementById('urlInput').addEventListener('keypress', (e) => {
+    if (e.key === 'Enter') analyzeURL();
+  });
+
+  document.getElementById('analyzeBtn').addEventListener('click', analyzeURL);
+  document.getElementById('feedbackYes').addEventListener('click', () => sendFeedback(true));
+  document.getElementById('feedbackNo').addEventListener('click', () => sendFeedback(false));
 });
